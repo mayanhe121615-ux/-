@@ -303,6 +303,93 @@ li{
     </div>
 
 </div>
+<script>
+let touchStartX = 0;
+let touchEndX = 0;
 
+document.addEventListener("touchstart", function(e){
+    touchStartX = e.changedTouches[0].screenX;
+});
+
+document.addEventListener("touchend", function(e){
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+});
+
+function handleSwipe(){
+
+    const swipeDistance = touchEndX - touchStartX;
+
+    if(Math.abs(swipeDistance) < 50){
+        return;
+    }
+
+    // 向左滑 → 下一頁
+    if(swipeDistance < 0){
+        window.location.href = "chapter5.html";
+    }
+
+    // 向右滑 → 上一頁
+    if(swipeDistance > 0){
+        window.location.href = "chapter3.html";
+    }
+}
+</script>
+    <style>
+
+.page-left,
+.page-right{
+    position:fixed;
+    top:0;
+    width:20%;
+    height:100%;
+    z-index:999;
+}
+
+.page-left{
+    left:0;
+}
+
+.page-right{
+    right:0;
+}
+
+</style>
+    <div class="page-left"></div>
+<div class="page-right"></div>
+
+<script>
+
+document.querySelector(".page-left").onclick=function(){
+    window.location.href="chapter3.html";
+};
+
+document.querySelector(".page-right").onclick=function(){
+    window.location.href="chapter5.html";
+};
+
+let touchStartX=0;
+let touchEndX=0;
+
+document.addEventListener("touchstart",function(e){
+    touchStartX=e.changedTouches[0].screenX;
+});
+
+document.addEventListener("touchend",function(e){
+    touchEndX=e.changedTouches[0].screenX;
+
+    let distance=touchEndX-touchStartX;
+
+    if(Math.abs(distance)<50) return;
+
+    if(distance<0){
+        window.location.href="chapter5.html";
+    }else{
+        window.location.href="chapter3.html";
+    }
+});
+
+</script>
+    
 </body>
 </html>
