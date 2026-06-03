@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>第四章｜系統沒有發現她已經離開了 - 個人網誌電子書</title>
     <style>
-        /* 基礎樣式重設與字體定義 */
+        /* 基礎樣式設定 */
         * {
             box-sizing: border-box;
             margin: 0;
@@ -13,387 +13,124 @@
         }
 
         body {
-            background-color: #f4f4f6;
-            font-family: "Noto Serif TC", "Songti TC", "SimSun", "Georgia", serif;
+            background-color: #ffffff;
+            font-family: "Noto Serif TC", "Songti TC", "SimSun", "Times New Roman", serif;
+            color: #1a1a1a;
+            height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            overflow-x: hidden;
-            color: #222222;
+            overflow: hidden;
         }
 
-        /* 電子書整體容器 */
+        /* 電子書整體容器（左翻頁 3D 視角環境） */
         .book-container {
-            position: relative;
             width: 900px;
             height: 600px;
-            perspective: 2000px; /* 3D 透視效果 */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        /* 書脊陰影與立體感線條 */
-        .book-spine {
-            position: absolute;
-            left: 50%;
-            top: 0;
-            width: 2px;
-            height: 100%;
-            background: linear-gradient(to right, rgba(0,0,0,0.15), rgba(0,0,0,0.), rgba(0,0,0,0.15));
-            z-index: 100;
-            transform: translateX(-50%);
-            pointer-events: none;
-        }
-
-        /* 書頁通用設定 */
-        .page {
-            position: absolute;
-            width: 450px; /* 剛好是書本總寬度的一半 */
-            height: 100%;
-            top: 0;
+            position: relative;
+            perspective: 2000px;
             background-color: #ffffff;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
-            transform-style: preserve-3d;
+        }
+
+        /* 單頁通用樣式 */
+        .page {
+            width: 450px;
+            height: 600px;
+            position: absolute;
+            top: 0;
+            right: 0;
             transform-origin: left center;
-            overflow: hidden;
-            user-select: none;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+            background-color: #ffffff;
+            box-shadow: inset 1px 0 0 rgba(0,0,0,0.05);
+            z-index: 1;
         }
 
-        /* 右側頁面基本定位（初始狀態疊在右邊） */
-        .page-right {
-            left: 50%;
-        }
-
-        /* 左側頁面基本定位（翻過去後的狀態） */
-        .page-left {
-            left: 50%;
-            transform: rotateY(-180deg);
-        }
-
-        /* 內容層：確保正反面翻轉時文字不顛倒 */
-        .page-content {
+        /* 書頁的正反面容器 */
+        .page-front, .page-back {
+            position: absolute;
             width: 100%;
             height: 100%;
-            padding: 50px 45px 60px 45px;
+            backface-visibility: hidden;
+            background-color: #ffffff;
+            padding: 60px 50px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            background: #ffffff;
-            backface-visibility: hidden;
-            position: relative;
         }
 
-        /* 背面內容（左頁）需要預先水平翻轉，翻過來時才會是正的 */
+        /* 反面需要水平翻轉 */
         .page-back {
             transform: rotateY(180deg);
-            border-right: 1px solid rgba(0, 47, 167, 0.08);
-        }
-        
-        .page-front {
-            border-left: 1px solid rgba(0, 47, 167, 0.08);
+            border-right: 1px solid rgba(0, 0, 0, 0.05);
         }
 
-        /* 翻頁動態類別 */
+        /* 頁面翻開後的狀態（向左翻轉 180 度） */
         .page.flipped {
             transform: rotateY(-180deg);
         }
 
-        /* ==========================================================================
-           克萊茵藍與排版設計 (Klein Blue Theme)
-           ========================================================================== */
-        :root {
-            --klein-blue: #002FA7; /* 純正克萊茵藍 */
-            --light-blue-bg: rgba(0, 47, 167, 0.03);
-        }
-
-        /* 封面樣式 (第 1 頁) */
+        /* 封面專屬樣式 */
         .cover-page {
-            background-image: url('封面.png');
-            background-size: cover;
-            background-position: center;
-            color: #ffffff;
+            background-color: #ffffff;
+            border-left: 4px solid #002FA7; /* 克萊茵藍左邊條飾 */
+            padding: 0;
+        }
+        
+        .cover-image-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
-            padding: 50px 40px;
-        }
-
-        .cover-overlay {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0, 47, 167, 0.4) 60%, rgba(0, 20, 70, 0.85) 100%);
-            z-index: 1;
-        }
-
-        .cover-data {
-            position: relative;
-            z-index: 2;
-        }
-
-        .cover-data h1 {
-            font-size: 24pt;
-            font-weight: 700;
-            line-height: 1.4;
-            margin-bottom: 15px;
-            letter-spacing: 2px;
-            border-bottom: 3px solid var(--klein-blue);
-            padding-bottom: 15px;
-        }
-
-        .cover-data .subtitle {
-            font-size: 14pt;
-            opacity: 0.9;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-        }
-
-        /* 內文排版 */
-        h2.main-title {
-            font-size: 18pt;
-            color: var(--klein-blue);
-            font-weight: bold;
-            margin-bottom: 8px;
-            line-height: 1.4;
-        }
-
-        h3.sub-title {
-            font-size: 13pt;
-            color: #333333;
-            font-weight: 600;
-            margin-top: 20px;
-            margin-bottom: 12px;
-            border-left: 3px solid var(--klein-blue);
-            padding-left: 10px;
-        }
-
-        .meta-theme {
-            font-size: 10.5pt;
-            color: var(--klein-blue);
-            letter-spacing: 1px;
-            margin-bottom: 25px;
-            opacity: 0.8;
-        }
-
-        /* 詩歌體/散文獨特排版 */
-        .poetry-block {
-            line-height: 2;
-            font-size: 11pt;
-            color: #333333;
-        }
-        
-        .poetry-block p {
-            margin-bottom: 12px;
-        }
-        
-        .poetry-block .highlight-text {
-            color: var(--klein-blue);
-            font-weight: bold;
-        }
-
-        /* 一般散文敘述 */
-        .prose-block {
-            font-size: 10.5pt;
-            line-height: 1.8;
-            color: #444444;
-            text-align: justify;
-        }
-
-        .prose-block p {
-            margin-bottom: 14px;
-        }
-
-        .prose-block strong {
-            color: var(--klein-blue);
-            font-weight: bold;
-        }
-
-        /* 重點叫出區塊 (Callout Box) */
-        .callout-box {
-            background-color: var(--light-blue-bg);
-            border-top: 1px solid rgba(0, 47, 167, 0.2);
-            border-bottom: 1px solid rgba(0, 47, 167, 0.2);
-            padding: 15px;
-            margin: 15px 0;
-            font-size: 10pt;
-            line-height: 1.7;
-        }
-
-        /* 清單樣式 */
-        .action-list {
-            list-style: none;
-            margin-top: 10px;
-        }
-
-        .action-list li {
-            position: relative;
-            padding-left: 20px;
-            margin-bottom: 15px;
-            font-size: 10.5pt;
-            line-height: 1.7;
-        }
-
-        .action-list li::before {
-            content: "■";
-            position: absolute;
-            left: 0;
-            top: 2px;
-            color: var(--klein-blue);
-            font-size: 8pt;
-        }
-
-        .action-list strong {
-            color: #111111;
-            display: block;
-            font-size: 11pt;
-            margin-bottom: 4px;
-        }
-
-        /* 頁碼與裝飾線 */
-        .page-footer {
-            display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 9pt;
-            color: #888888;
-            border-top: 1px solid #eeeeee;
-            padding-top: 15px;
-            font-family: "Georgia", serif;
         }
 
-        .page-footer .page-number {
-            color: var(--klein-blue);
-            font-weight: bold;
-            letter-spacing: 1px;
-        }
-
-        /* 控制按鈕（下方導覽） */
-        .controls {
-            position: absolute;
-            bottom: -60px;
-            display: flex;
-            gap: 20px;
-            z-index: 200;
-        }
-
-        .btn {
-            background-color: #ffffff;
-            color: var(--klein-blue);
-            border: 1px solid var(--klein-blue);
-            padding: 8px 20px;
-            font-family: inherit;
-            font-size: 10pt;
-            cursor: pointer;
-            transition: all 0.3s;
-            letter-spacing: 1px;
-        }
-
-        .btn:hover {
-            background-color: var(--klein-blue);
-            color: #ffffff;
-            box-shadow: 0 4px 12px rgba(0, 47, 167, 0.2);
-        }
-
-        /* 點擊頁面邊緣的可點擊區域提示 */
-        .click-layer {
-            position: absolute;
-            top: 0;
-            width: 50px;
+        .cover-img {
+            width: 100%;
             height: 100%;
-            cursor: pointer;
-            z-index: 150;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: rgba(0, 47, 167, 0.2);
-            font-size: 24px;
-            transition: all 0.3s;
-            opacity: 0;
+            object-fit: cover;
         }
 
-        .book-container:hover .click-layer {
-            opacity: 1;
+        /* 克萊茵藍標題遮罩層（若需要直接在封面上呈現文字） */
+        .cover-title-overlay {
+            position: absolute;
+            bottom: 40px;
+            left: 40px;
+            right: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-left: 5px solid #002FA7;
         }
 
-        .click-layer-left { left: -60px; }
-        .click-layer-right { right: -60px; }
-        .click-layer:hover { color: var(--klein-blue); transform: scale(1.1); }
-    </style>
-</head>
-<body>
+        /* 字體與排版系統（宋體加強） */
+        h1 {
+            font-size: 26pt;
+            font-weight: 700;
+            color: #002FA7; /* 大標題使用克萊茵藍 */
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
 
-    <div class="book-container" id="book">
-        <div class="book-spine"></div>
+        h2 {
+            font-size: 18pt;
+            font-weight: 600;
+            color: #002FA7; /* 中標題使用克萊茵藍 */
+            line-height: 1.4;
+            margin-top: 15px;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #002FA7;
+            padding-bottom: 5px;
+        }
 
-        <div class="click-layer click-layer-left" onclick="prevPage()">❮</div>
-        <div class="click-layer click-layer-right" onclick="nextPage()">❯</div>
-
-        <div class="page page-right" style="z-index: 5;">
-            <div class="page-content cover-page">
-                <div class="cover-overlay"></div>
-                <div class="cover-data">
-                    <p class="subtitle">Chapter 04</p>
-                    <h1>系統沒有發現她已經離開了</h1>
-                    <p style="font-size: 10.5pt; opacity: 0.8; letter-spacing: 1px;">演算法與數位存在 ｜ 個人網誌</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="page page-right" style="z-index: 4;">
-            <div class="page-content page-back">
-                <div class="poetry-block">
-                    <p>她離開的第 49 天。</p>
-                    <p>她的信箱收到一封通知。</p>
-                    <p class="highlight-text">「我們很久沒有看到您登入了。」</p>
-                    <p class="highlight-text">「請點擊以下連結確認帳戶狀態。」</p>
-                    <p>她當然不會點。</p>
-                    <p>但系統不知道。</p>
-                    <br>
-                    <p>Spotify 還在推薦新歌。<br>
-                    YouTube 還在推她喜歡的影片。<br>
-                    購物網站還在提醒她：</p>
-                    <p class="highlight-text">「你加入購物車的商品現在特價喔！」</p>
-                </div>
-                <div class="page-footer">
-                    <span class="page-number">- 01 -</span>
-                </div>
-            </div>
+        h3 {
+            font-size: 13pt;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-top: 12px;
+            margin
             
-            <div class="page-content page-front">
-                <div class="poetry-block">
-                    <p>世界沒有停止。</p>
-                    <p>演算法也沒有。</p>
-                    <p>它們不知道什麼叫死亡。</p>
-                    <p>它們只知道：</p>
-                    <p style="padding-left: 15px; border-left: 2px solid var(--klein-blue);">
-                        你有見過登入嗎？<br>
-                        有沒有點擊？<br>
-                        有沒有消費？
-                    </p>
-                    <br>
-                    <p>某天，<br>
-                    她媽媽滑到她的帳號。</p>
-                    <p>看到下面寫著：<br>
-                    <strong>「為你推薦」</strong></p>
-                    <p>她突然哭了。</p>
-                    <p>不是因為思念。而是因為——</p>
-                    <p class="highlight-text" style="font-size: 13pt;">這個世界還在假裝她存在。</p>
-                </div>
-                <div class="page-footer">
-                    <span class="page-number">- 02 -</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="page page-right" style="z-index: 3;">
-            <div class="page-content page-back">
-                <div>
-                    <h2 class="main-title">主題：演算法與數位存在</h2>
-                    <p class="meta-theme">The Algorithm and Digital Existence</p>
-                    
-                    <h3 class="sub-title">演算法如何運作？「預測你會想看什麼」的精密系統</h3>
-                    <div class="prose-block">
-                        <p>現代網路平台的核心，是一套複雜的數學與統計模型。演算法的本質並非理解人類的情感，而是透過海量的行為數據，去<strong>極大化使用者的留存率與點擊率</strong>。它主要的判斷依據包含：</p>
-                        <p>• <strong>點擊與瀏覽軌跡：</strong>你點開了什麼，直接
