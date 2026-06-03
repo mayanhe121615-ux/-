@@ -1,0 +1,532 @@
+# 透過 Python 建立 index.html 檔案，實現克萊茵藍風格的左翻頁電子書
+html_content = """<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>第四章｜系統沒有發現她已經離開了 - 個人網誌電子書</title>
+    <style>
+        /* 基礎樣式重設與字體定義 */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #f4f4f6;
+            font-family: "Noto Serif TC", "Songti TC", "SimSun", "Georgia", serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: #222222;
+        }
+
+        /* 電子書整體容器 */
+        .book-container {
+            position: relative;
+            width: 900px;
+            height: 600px;
+            perspective: 2000px; /* 3D 透視效果 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 書脊陰影與立體感線條 */
+        .book-spine {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background: linear-gradient(to right, rgba(0,0,0,0.15), rgba(0,0,0,0.0), rgba(0,0,0,0.15));
+            z-index: 100;
+            transform: translateX(-50%);
+            pointer-events: none;
+        }
+
+        /* 書頁通用設定 */
+        .page {
+            position: absolute;
+            width: 450px; /* 剛好是書本總寬度的一半 */
+            height: 100%;
+            top: 0;
+            background-color: #ffffff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+            transform-style: preserve-3d;
+            transform-origin: left center;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* 右側頁面基本定位（初始狀態疊在右邊） */
+        .page-right {
+            left: 50%;
+        }
+
+        /* 左側頁面基本定位（翻過去後的狀態） */
+        .page-left {
+            left: 50%;
+            transform: rotateY(-180deg);
+        }
+
+        /* 內容層：確保正反面翻轉時文字不顛倒 */
+        .page-content {
+            width: 100%;
+            height: 100%;
+            padding: 50px 45px 60px 45px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background: #ffffff;
+            backface-visibility: hidden;
+            position: relative;
+        }
+
+        /* 背面內容（左頁）需要預先水平翻轉，翻過來時才會是正的 */
+        .page-back {
+            transform: rotateY(180deg);
+            border-right: 1px solid rgba(0, 47, 167, 0.08);
+        }
+        
+        .page-front {
+            border-left: 1px solid rgba(0, 47, 167, 0.08);
+        }
+
+        /* 翻頁動態類別 */
+        .page.flipped {
+            transform: rotateY(-180deg);
+        }
+
+        /* ==========================================================================
+           克萊茵藍與排版設計 (Klein Blue Theme)
+           ========================================================================== */
+        :root {
+            --klein-blue: #002FA7; /* 純正克萊茵藍 */
+            --light-blue-bg: rgba(0, 47, 167, 0.03);
+        }
+
+        /* 封面樣式 (第 1 頁) */
+        .cover-page {
+            background-image: url('封面.png');
+            background-size: cover;
+            background-position: center;
+            color: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 50px 40px;
+        }
+
+        .cover-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.2) 0%, rgba(0, 47, 167, 0.4) 60%, rgba(0, 20, 70, 0.85) 100%);
+            z-index: 1;
+        }
+
+        .cover-data {
+            position: relative;
+            z-index: 2;
+        }
+
+        .cover-data h1 {
+            font-size: 24pt;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+            border-bottom: 3px solid var(--klein-blue);
+            padding-bottom: 15px;
+        }
+
+        .cover-data .subtitle {
+            font-size: 14pt;
+            opacity: 0.9;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        /* 內文排版 */
+        h2.main-title {
+            font-size: 18pt;
+            color: var(--klein-blue);
+            font-weight: bold;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        h3.sub-title {
+            font-size: 13pt;
+            color: #333333;
+            font-weight: 600;
+            margin-top: 20px;
+            margin-bottom: 12px;
+            border-left: 3px solid var(--klein-blue);
+            padding-left: 10px;
+        }
+
+        .meta-theme {
+            font-size: 10.5pt;
+            color: var(--klein-blue);
+            letter-spacing: 1px;
+            margin-bottom: 25px;
+            opacity: 0.8;
+        }
+
+        /* 詩歌體/散文獨特排版 */
+        .poetry-block {
+            line-height: 2;
+            font-size: 11pt;
+            color: #333333;
+        }
+        
+        .poetry-block p {
+            margin-bottom: 12px;
+        }
+        
+        .poetry-block .highlight-text {
+            color: var(--klein-blue);
+            font-weight: bold;
+        }
+
+        /* 一般散文敘述 */
+        .prose-block {
+            font-size: 10.5pt;
+            line-height: 1.8;
+            color: #444444;
+            text-align: justify;
+        }
+
+        .prose-block p {
+            margin-bottom: 14px;
+        }
+
+        .prose-block strong {
+            color: var(--klein-blue);
+            font-weight: bold;
+        }
+
+        /* 重點叫出區塊 (Callout Box) */
+        .callout-box {
+            background-color: var(--light-blue-bg);
+            border-top: 1px solid rgba(0, 47, 167, 0.2);
+            border-bottom: 1px solid rgba(0, 47, 167, 0.2);
+            padding: 15px;
+            margin: 15px 0;
+            font-size: 10pt;
+            line-height: 1.7;
+        }
+
+        /* 清單樣式 */
+        .action-list {
+            list-style: none;
+            margin-top: 10px;
+        }
+
+        .action-list li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 15px;
+            font-size: 10.5pt;
+            line-height: 1.7;
+        }
+
+        .action-list li::before {
+            content: "■";
+            position: absolute;
+            left: 0;
+            top: 2px;
+            color: var(--klein-blue);
+            font-size: 8pt;
+        }
+
+        .action-list strong {
+            color: #111111;
+            display: block;
+            font-size: 11pt;
+            margin-bottom: 4px;
+        }
+
+        /* 頁碼與裝飾線 */
+        .page-footer {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 9pt;
+            color: #888888;
+            border-top: 1px solid #eeeeee;
+            padding-top: 15px;
+            font-family: "Georgia", serif;
+        }
+
+        .page-footer .page-number {
+            color: var(--klein-blue);
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        /* 控制按鈕（下方導覽） */
+        .controls {
+            position: absolute;
+            bottom: -60px;
+            display: flex;
+            gap: 20px;
+            z-index: 200;
+        }
+
+        .btn {
+            background-color: #ffffff;
+            color: var(--klein-blue);
+            border: 1px solid var(--klein-blue);
+            padding: 8px 20px;
+            font-family: inherit;
+            font-size: 10pt;
+            cursor: pointer;
+            transition: all 0.3s;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            background-color: var(--klein-blue);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 47, 167, 0.2);
+        }
+
+        /* 點擊頁面邊緣的可點擊區域提示 */
+        .click-layer {
+            position: absolute;
+            top: 0;
+            width: 50px;
+            height: 100%;
+            cursor: pointer;
+            z-index: 150;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(0, 47, 167, 0.2);
+            font-size: 24px;
+            transition: all 0.3s;
+            opacity: 0;
+        }
+
+        .book-container:hover .click-layer {
+            opacity: 1;
+        }
+
+        .click-layer-left { left: -60px; }
+        .click-layer-right { right: -60px; }
+        .click-layer:hover { color: var(--klein-blue); transform: scale(1.1); }
+    </style>
+</head>
+<body>
+
+    <div class="book-container" id="book">
+        <div class="book-spine"></div>
+
+        <div class="click-layer click-layer-left" onclick="prevPage()">❮</div>
+        <div class="click-layer click-layer-right" onclick="nextPage()">❯</div>
+
+        <div class="page page-right" style="z-index: 5;">
+            <div class="page-content cover-page">
+                <div class="cover-overlay"></div>
+                <div class="cover-data">
+                    <p class="subtitle">Chapter 04</p>
+                    <h1>系統沒有發現她已經離開了</h1>
+                    <p style="font-size: 10.5pt; opacity: 0.8; letter-spacing: 1px;">演算法與數位存在 ｜ 個人網誌</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="page page-right" style="z-index: 4;">
+            <div class="page-content page-back">
+                <div class="poetry-block">
+                    <p>她離開的第 49 天。</p>
+                    <p>她的信箱收到一封通知。</p>
+                    <p class="highlight-text">「我們很久沒有看到您登入了。」</p>
+                    <p class="highlight-text">「請點擊以下連結確認帳戶狀態。」</p>
+                    <p>她當然不會點。</p>
+                    <p>但系統不知道。</p>
+                    <br>
+                    <p>Spotify 還在推薦新歌。<br>
+                    YouTube 還在推她喜歡的影片。<br>
+                    購物網站還在提醒她：</p>
+                    <p class="highlight-text">「你加入購物車的商品現在特價喔！」</p>
+                </div>
+                <div class="page-footer">
+                    <span class="page-number">- 01 -</span>
+                </div>
+            </div>
+            
+            <div class="page-content page-front">
+                <div class="poetry-block">
+                    <p>世界沒有停止。</p>
+                    <p>演算法也沒有。</p>
+                    <p>它們不知道什麼叫死亡。</p>
+                    <p>它們只知道：</p>
+                    <p style="padding-left: 15px; border-left: 2px solid var(--klein-blue);">
+                        你有沒有登入。<br>
+                        有沒有點擊。<br>
+                        有沒有消費。
+                    </p>
+                    <br>
+                    <p>某天，<br>
+                    她媽媽滑到她的帳號。</p>
+                    <p>看到下面寫著：<br>
+                    <strong>「為你推薦」</strong></p>
+                    <p>她突然哭了。</p>
+                    <p>不是因為思念。而是因為——</p>
+                    <p class="highlight-text" style="font-size: 13pt;">這個世界還在假裝她存在。</p>
+                </div>
+                <div class="page-footer">
+                    <span class="page-number">- 02 -</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="page page-right" style="z-index: 3;">
+            <div class="page-content page-back">
+                <div>
+                    <h2 class="main-title">主題：演算法與數位存在</h2>
+                    <p class="meta-theme">The Algorithm and Digital Existence</p>
+                    
+                    <h3 class="sub-title">演算法如何運作？「預測你會想看什麼」的精密系統</h3>
+                    <div class="prose-block">
+                        <p>現代網路平台的核心，是一套複雜的數學與統計模型。演算法的本質並非理解人類的情感，而是透過海量的行為數據，去<strong>極大化使用者的留存率與點擊率</strong>。它主要的判斷依據包含：</p>
+                        <p>• <strong>點擊與瀏覽軌跡：</strong>你點開了什麼，直接決定了你被貼上什麼標籤。</p>
+                        <p>• <strong>精準停留時間：</strong>演算法甚至會計算你在某個畫面停頓了幾秒，來判斷潛在興趣。</p>
+                        <p>• <strong>主動搜尋紀錄：</strong>反映當下最直接的需求與意圖。</p>
+                        <p>• <strong>數位消費習慣：</strong>購物車與歷史訂單是預測未來消費最強大的權重。</p>
+                    </div>
+                </div>
+                <div class="page-footer">
+                    <span class="page-number">- 03 -</span>
+                </div>
+            </div>
+            
+            <div class="page-content page-front">
+                <div>
+                    <h3 class="sub-title">平台只認「活躍度」的機械邏輯</h3>
+                    <div class="prose-block">
+                        <p>在冷冰冰的伺服器眼中，世界是由 0 與 1 組成的訊號流。系統無法感知人類世界的悲傷、疾病，甚至是肉體的消亡。對於後台資料庫來說，一個帳號只存在兩種狀態：<strong>「活躍」與「不活躍」</strong>。</p>
+                        <p>當一個帳號突然靜止，演算法觸發的不是哀悼，而是「喚醒機制」。為了挽救下滑的用戶日活量（DAU），自動化郵件與特價推播會被精準定時發送，促使帳號重新產生互動。這種技術上的「體體貼」，在現實中卻成了最殘酷的諷刺。</p>
+                    </div>
+                    <div class="callout-box">
+                        <strong>數位存在感的延續：</strong><br>
+                        肉體已然離去，但雲端歌單、未完的購物車與推薦演算法仍在運作。對親人而言，這營造出一種「他好像還活著」的賽博幻覺。
+                    </div>
+                </div>
+                <div class="page-footer">
+                    <span class="page-number">- 04 -</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="page page-right" style="z-index: 2;">
+            <div class="page-content page-back">
+                <div>
+                    <h2 class="main-title">【現實問題】與倫理困境</h2>
+                    <p class="meta-theme">Ethical Dilemmas of Digital Ghosts</p>
+                    
+                    <h3 class="sub-title">永無止境的數位幽靈通知</h3>
+                    <div class="prose-block">
+                        <p>當逝者在網路上留下的痕跡被動被喚醒，對生者往往造成二次傷害：</p>
+                        <p>• <strong>家人持續收到通知：</strong>突如其來的「祝他生日快樂」提示或好友推薦，會反覆撕開傷口。</p>
+                        <p>• <strong>社群跳出回憶提醒：</strong>自動生成的「歷史上的今天」將過去的歡笑硬生生塞回痛苦的當下。</p>
+                    </div>
+                    
+                    <h3 class="sub-title">AI 與演算法延續已故者痕跡</h3>
+                    <div class="prose-block">
+                        <p>隨著生成式 AI 演進，這已不僅僅是推播問題，更衍生出<strong>數位永生（Digital Immortality）</strong>的倫理爭議。未來透過 AI 模擬聲音、重建對話甚至複製虛擬人格，我們該如何界定一個人的真正死亡？</p>
+                    </div>
+                </div>
+                <div class="page-footer">
+                    <span class="page-number">- 05 -</span>
+                </div>
+            </div>
+            
+            <div class="page-content page-front">
+                <div>
+                    <h2 class="main-title">【行動小整理】數位遺產管理</h2>
+                    <p class="meta-theme">Digital Estate Planning</p>
+                    <p class="prose-block" style="font-size: 10pt; margin-bottom: 10px;">
+                        為了避免演算法在我們離去後繼續造成家人的困擾，提早進行「數位生前預囑」已成為現代人的必修課：
+                    </p>
+                    
+                    <ul class="action-list">
+                        <li>
+                            <strong>1. 主動關閉或清理不必要通知</strong>
+                            定期清理不再使用的 App 帳號，或在隱私設定中限制平台向好友推薦您的動態，主動降低演算法的曝光頻率。
+                        </li>
+                        <li>
+                            <strong>2. 善用「帳號閒置管理」功能</strong>
+                            現今主流平台已提供相關機制：
+                            <span style="display:block; margin-top:5px; color:#555; font-size:9.5pt;">
+                                <strong>• Google 閒置帳戶管理員：</strong>可設定 3 至 18 個月未登入後，自動將資料信箱權限轉交給信任的聯絡人，或直接啟動全帳號自動刪除。
+                            </span>
+                            <span style="display:block; margin-top:5px; color:#555; font-size:9.5pt;">
+                                <strong>• Apple 數位遺產計畫：</strong>可指定「遺產聯絡人」，在出示死亡證明後，讓家人合法繼承照片與關鍵資料，而非任由演算法無效推播。
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="page-footer">
+                    <span class="page-number">- 06 -</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn" onclick="prevPage()">上一頁 (Prev)</button>
+            <button class="btn" onclick="nextPage()">下一頁 (Next)</button>
+        </div>
+    </div>
+
+    <script>
+        // 取得所有書頁卡片（每張卡片包含一個左頁背面與一個右頁正面）
+        // 排序：依據 DOM 順序，第 0 個是封面卡，第 1 個是內頁1-2卡，以此類推
+        const pages = document.querySelectorAll('.page-right');
+        let currentPageIndex = 0; // 當前在最前面的卡片索引
+
+        function initBook() {
+            // 初始化 z-index 確保層級正確
+            for (let i = 0; i < pages.length; i++) {
+                pages[i].style.zIndex = pages.length - i;
+            }
+        }
+
+        function nextPage() {
+            if (currentPageIndex < pages.length - 1) {
+                // 將當前卡片向左翻折 (旋轉 -180 度)
+                pages[currentPageIndex].classList.add('flipped');
+                // 調低已被翻過去卡片的 z-index，避免遮擋
+                pages[currentPageIndex].style.zIndex = currentPageIndex + 1;
+                currentPageIndex++;
+            }
+        }
+
+        function prevPage() {
+            if (currentPageIndex > 0) {
+                currentPageIndex--;
+                // 將前一張卡片翻回來 (恢復 0 度)
+                pages[currentPageIndex].classList.remove('flipped');
+                // 恢復其對應的權重層級
+                pages[currentPageIndex].style.zIndex = pages.length - currentPageIndex;
+            }
+        }
+
+        // 初始化電子書
+        initBook();
+    </script>
+</body>
+</html>
+"""
+
+# 將程式碼寫入 index.html 檔案中
+with open("index.html", "w", encoding="utf-8") as file:
+    file.write(html_content)
+print("成功產生 index.html 網頁電子書檔案")
