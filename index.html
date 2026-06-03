@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>數位骨灰罈</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:"Noto Sans TC",sans-serif;
+background:#fff;
+overflow:hidden;
+}
+
+.book{
+display:flex;
+overflow-x:hidden;
+height:100vh;
+scroll-behavior:smooth;
+}
+
+.page{
+min-width:100vw;
+height:100vh;
+padding:80px;
+background:white;
+position:relative;
+overflow-y:auto;
+}
+
+.cover{
+display:flex;
+justify-content:center;
+align-items:center;
+padding:0;
+}
+
+.cover img{
+height:100vh;
+width:auto;
+max-width:100%;
+object-fit:contain;
+}
+
+.chapter{
+max-width:800px;
+margin:auto;
+padding-top:100px;
+}
+
+.chapter h1{
+font-size:42px;
+margin-bottom:60px;
+font-weight:700;
+}
+
+.chapter p{
+font-size:24px;
+line-height:2.2;
+margin-bottom:30px;
+}
+
+.center-page{
+display:flex;
+justify-content:center;
+align-items:center;
+text-align:center;
+}
+
+.quote{
+font-size:52px;
+line-height:2;
+font-weight:700;
+}
+
+.card{
+max-width:850px;
+margin:auto;
+border:1px solid #ddd;
+padding:40px;
+margin-top:40px;
+}
+
+.card h2{
+margin-bottom:20px;
+}
+
+.card ul{
+padding-left:30px;
+line-height:2;
+font-size:22px;
+}
+
+.card p{
+font-size:22px;
+line-height:2;
+}
+
+.notice{
+max-width:700px;
+margin:40px auto;
+border:1px solid #ddd;
+padding:25px;
+border-radius:15px;
+background:#fafafa;
+}
+
+.notice-title{
+font-weight:700;
+margin-bottom:10px;
+}
+
+.page-number{
+position:absolute;
+bottom:20px;
+right:40px;
+color:#888;
+font-size:18px;
+}
+
+.nav{
+position:fixed;
+bottom:20px;
+z-index:999;
+}
+
+.prev{
+left:20px;
+}
+
+.next{
+right:20px;
+}
+
+button{
+padding:12px 24px;
+font-size:18px;
+border:none;
+background:#1e40af;
+color:white;
+cursor:pointer;
+border-radius:10px;
+}
+
+button:hover{
+opacity:.85;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="book" id="book">
+
+<!-- 封面 -->
+
+<section class="page cover">
+
+<img src="封面.png">
+
+<div class="page-number">
+封面
+</div>
+
+</section>
+
+<!-- P1 -->
+
+<section class="page">
+
+<div class="chapter">
+
+<h1>
+第四章｜系統沒有發現她已經離開了
+</h1>
+
+<p>她離開的第 49 天。</p>
+
+<p>她的信箱收到一封通知。</p>
+
+<p>「我們很久沒有看到您登入了。」</p>
+
+<p>「請點擊以下連結確認帳戶狀態。」</p>
+
+<p>她當然不會點。</p>
+
+<p>但系統不知道。</p>
+
+</div>
+
+<div class="page-number">
+1
+</div>
+
+</section>
+
+<!-- P2 -->
+
+<section class="page">
+
+<div class="notice">
+
+<div class="notice-title">
+Spotify
+</div>
+
+推薦新歌給你
+</div>
+
+<div class="notice">
+
+<div class="notice-title">
+YouTube
+</div>
+
+推薦了新影片
+</div>
+
+<div class="notice">
+
+<div class="notice-title">
+蝦皮購物
+</div>
+
+你加入購物車的商品現在特價喔！
+</div>
+
+<div class="page-number">
+2
+</div>
+
+</section>
+
+<!-- P3 -->
+
+<section class="page center-page">
+
+<div class="quote">
+
+世界沒有停止。<br><br>
+
+演算法也沒有。
+
+</div>
+
+<div class="page-number">
+3
+</div>
+
+</section>
+
+<!-- P4 -->
+
+<section class="page">
+
+<div class="chapter">
+
+<p>
+它們不知道什麼叫死亡。
+</p>
+
+<p>
+它們只知道：
+</p>
+
+<p>
+你有沒有登入。
+</p>
+
+<p>
+有沒有點擊。
+</p>
+
+<p>
+有沒有消費。
+</p>
+
+<p>
+某天，
+她媽媽滑到她的帳號。
+</p>
+
+<p>
+看到下面寫著：
+</p>
+
+<p>
+「為你推薦」
+</p>
+
+<p>
+她突然哭了。
+</p>
+
+<p>
+不是因為思念。
+</p>
+
+<p>
+而是因為——
+</p>
+
+<p>
+這個世界還在假裝她存在。
+</p>
+
+</div>
+
+<div class="page-number">
+4
+</div>
+
+</section>
+
+<!-- P5 -->
+
+<section class="page">
+
+<div class="card">
+
+<h2>
+主題：演算法與數位存在
+</h2>
+
+<p>
+演算法是一套利用資料分析與預測的機制，
+目的是讓平台更準確地推薦內容。
+</p>
+
+<p>
+當使用者瀏覽影片、收聽音樂、
+搜尋資訊或進行購物時，
+每一次互動都會留下資料。
+</p>
+
+</div>
+
+<div class="page-number">
+5
+</div>
+
+</section>
+
+<!-- P6 -->
+
+<section class="page">
+
+<div class="card">
+
+<h2>
+演算法如何運作？
+</h2>
+
+<p>
+演算法其實是一種：
+</p>
+
+<p style="font-weight:700">
+「預測你會想看什麼」的系統
+</p>
+
+<ul>
+
+<li>點擊紀錄</li>
+
+<li>停留時間</li>
+
+<li>搜尋紀錄</li>
+
+<li>消費習慣</li>
+
+</ul>
+
+<p>
+系統會根據這些資訊建立個人興趣模型，
+並持續推薦相似內容。
+</p>
+
+</div>
+
+<div class="page-number">
+6
+</div>
+
+</section>
+
+<!-- P7 -->
+
+<section class="page">
+
+<div class="card">
+
+<h2>
+平台只認活躍度
+</h2>
+
+<p>
+系統不知道：
+</p>
+
+<ul>
+
+<li>悲傷</li>
+
+<li>生病</li>
+
+<li>死亡</li>
+
+</ul>
+
+<p>
+它只知道：
+</p>
+
+<p>
+這個帳號最近有沒有活動。
+</p>
+
+<p>
+因此即使使用者已經離世，
+通知仍可能持續出現。
+</p>
+
+</div>
+
+<div class="page-number">
+7
+</div>
+
+</section>
+
+<!-- P8 -->
+
+<section class="page">
+
+<div class="card">
+
+<h2>
+數位存在感的延續
+</h2>
+
+<p>
+即使人離開了：
+</p>
+
+<ul>
+
+<li>歌單還在</li>
+
+<li>推薦還在</li>
+
+<li>通知還在</li>
+
+</ul>
+
+<p>
+於是家人可能產生一種感覺：
+</p>
+
+<h2>
+「他好像還活著。」
+</h2>
+
+<p>
+這就是數位存在感。
+</p>
+
+</div>
+
+<div class="page-number">
+8
+</div>
+
+</section>
+
+<!-- P9 -->
+
+<section class="page">
+
+<div class="card">
+
+<h2>
+AI 與數位遺產
+</h2>
+
+<p>
+未來甚至可能出現：
+</p>
+
+<ul>
+
+<li>AI 聲音模擬</li>
+
+<li>AI 對話重建</li>
+
+<li>AI 虛擬人格</li>
+
+</ul>
+
+<p>
+透過大量資料，
+AI 可以模仿一個人的說話方式與習慣。
+</p>
+
+</div>
+
+<div class="page-number">
+9
+</div>
+
+</section>
+
+<!-- P10 -->
+
+<section class="page center-page">
+
+<div class="quote">
+
+有些人離開了。<br><br>
+
+但資料沒有。<br><br>
+
+在數位世界裡，<br>
+
+死亡不是終止，<br>
+
+而是停止更新。
+
+</div>
+
+<div class="page-number">
+10
+</div>
+
+</section>
+
+</div>
+
+<button class="nav prev" onclick="prevPage()">
+← 上一頁
+</button>
+
+<button class="nav next" onclick="nextPage()">
+下一頁 →
+</button>
+
+<script>
+
+const book=document.getElementById("book");
+
+function nextPage(){
+book.scrollBy({
+left:window.innerWidth,
+behavior:"smooth"
+});
+}
+
+function prevPage(){
+book.scrollBy({
+left:-window.innerWidth,
+behavior:"smooth"
+});
+}
+
+</script>
+
+</body>
+</html>
