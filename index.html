@@ -15,10 +15,9 @@
 
 body{
     background:#dcdcdc;
-    font-family:"SimSun",serif;
+    font-family:"Noto Serif TC","Microsoft JhengHei",serif;
     color:#222;
     line-height:2;
-
     scroll-snap-type:y mandatory;
     overflow-y:scroll;
     height:100vh;
@@ -30,12 +29,22 @@ body{
     padding-bottom:60px;
 }
 
-/* 封面 */
+/* page */
+.page{
+    width:800px;
+    min-height:700px;
+    background:white;
+    margin:50px auto;
+    padding:60px 70px;
+    box-shadow:0 0 20px rgba(0,0,0,0.15);
+    border-radius:12px;
+    position:relative;
+    scroll-snap-align:start;
+}
 
+/* 封面 */
 .cover{
     text-align:center;
-    padding:40px 30px;
-    border-bottom:5px solid #002FA7;
 }
 
 .cover img{
@@ -43,24 +52,7 @@ body{
     max-width:700px;
 }
 
-.cover-title{
-    font-size:38px;
-    margin-top:25px;
-    font-weight:bold;
-    color:#002FA7;
-}
-
-.cover-subtitle{
-    font-size:20px;
-    margin-top:10px;
-}
-
-/* 內容 */
-
-.content{
-    padding:50px 70px;
-}
-
+/* 文字 */
 .chapter-title{
     font-size:32px;
     font-weight:bold;
@@ -73,18 +65,13 @@ body{
 .story{
     font-size:22px;
     text-align:center;
-    margin-bottom:80px;
-}
-
-.story p{
-    margin-bottom:15px;
+    margin-bottom:40px;
 }
 
 .section-title{
     font-size:28px;
     font-weight:bold;
     color:#002FA7;
-    margin-top:60px;
     margin-bottom:25px;
 }
 
@@ -98,7 +85,6 @@ p{
     font-size:20px;
     margin-bottom:18px;
     text-indent:2em;
-
 }
 
 ul{
@@ -111,258 +97,140 @@ li{
     margin-bottom:12px;
 }
 
-.page-number{
-    text-align:center;
-    color:#002FA7;
-    font-size:20px;
-    margin-top:60px;
-}
-
 .highlight{
     color:#002FA7;
     font-weight:bold;
 }
 
-.page{
-    width:800px;
-    min-height:700px;
-
-    background:white;
-
-    margin:50px auto;
-
-    padding:60px 70px;
-
-    box-shadow:0 0 20px rgba(0,0,0,0.15);
-
-    border-radius:12px;
-
-    position:relative;
-
-    scroll-snap-align:start;
-}
-
-.page:last-child{
-    page-break-after:auto;
-}
-
+/* page number */
 .page-number{
     position:absolute;
     bottom:25px;
     left:0;
     right:0;
-
     text-align:center;
-
     color:#002FA7;
     font-size:20px;
 }
-
 </style>
-
 </head>
 
 <body>
 
 <div class="container">
 
-    <!-- 封面 -->
-
-   <!-- 封面 -->
-
+<!-- ================= 封面 ================= -->
 <div class="page">
     <div class="cover">
         <img src="封面.png" alt="封面">
     </div>
+    <div class="page-number">1</div>
 </div>
 
-    <div class="content">
-        <div class="page">
-        <div class="chapter-title">
-            第四章｜系統沒有發現她已經離開了
-        </div>
+<!-- ================= 小說第1頁 ================= -->
+<div class="page">
+    <div class="chapter-title">第四章｜系統沒有發現她已經離開了</div>
 
-        <div class="story">
-
-            <p>她離開的第 49 天。</p>
-
-            <p>她的信箱收到一封通知。</p>
-
-            <p>「我們很久沒有看到您登入了。」</p>
-
-            <p>「請點擊以下連結確認帳戶狀態。」</p>
-
-            <p>她當然不會點。</p>
-
-            <p>但系統不知道。</p>
-
-            <p>Spotify 還在推薦新歌。</p>
-
-            <p>YouTube 還在推她喜歡的影片。</p>
-
-            <p>購物網站還在提醒她：</p>
-
-            <p>「你加入購物車的商品現在特價喔！」</p>
-        </div>
-            <div class="page-number">1</div>
-        </div> 
-            <div class="page">
-                 <div class="story">
-            
-        
-
-            <p>世界沒有停止。</p>
-
-            <p>演算法也沒有。</p>
-
-            <p>它們不知道什麼叫死亡。</p>
-
-            <p>它們只知道：</p>
-
-            <p>你有沒有登入。<br>
-            有沒有點擊。<br>
-            有沒有消費。</p>
-            <div class="page-number">2</div>
-                </div>
-            <div class="page">
-                 <div class="story">
-
-            <p>某天，<br>
-            她媽媽滑到她的帳號。</p>
-
-            <p>看到下面寫著：</p>
-
-            <p>「為你推薦」</p>
-
-            <p>她突然哭了。</p>
-
-            <p>不是因為思念。</p>
-
-            <p>而是因為——</p>
-
-            <p>這個世界還在假裝她存在。</p>
-            <div class="page-number">3</div>
-                 </div>
-                <div class="page">
-
-        <div class="section-title">
-            正式解說｜演算法與數位存在
-        </div>
-
-        <div class="sub-title">
-            演算法如何運作？
-        </div>
-
-        <p>
-            「預測你會想看什麼」的精密系統。現代網路平台的核心，
-            是一套複雜的數學與統計模型。演算法的本質並非理解人類情感，
-            而是透過海量行為數據，去
-            <span class="highlight">極大化使用者留存率與點擊率</span>。
-        </p>
-
-        <ul>
-            <li>點擊與瀏覽軌跡：決定你被貼上的興趣標籤。</li>
-            <li>精準停留時間：分析潛在興趣與偏好。</li>
-            <li>主動搜尋紀錄：反映最直接的需求。</li>
-            <li>數位消費習慣：預測未來消費的重要依據。</li>
-        </ul>
-
-        <div class="page-number">4</div>
-    </div>
-    <div class="page">
-
-        <div class="section-title">
-            平台只認「活躍度」的機械邏輯
-        </div>
-
-        <p>
-            在冷冰冰的伺服器眼中，世界只是由資料組成。
-            系統無法感知悲傷、疾病甚至死亡。
-            對資料庫而言，帳號只有
-            <span class="highlight">活躍</span>
-            與
-            <span class="highlight">不活躍</span>
-            兩種狀態。
-        </p>
-
-        <p>
-            當帳號突然沉寂，系統觸發的不是哀悼，
-            而是各種喚醒機制。郵件通知、
-            特價推播與互動提醒持續發送，
-            試圖讓帳號再次產生活動。
-        </p>
-
-        <p>
-            肉體已離開，但雲端歌單、
-            未完成的購物車與推薦系統仍然持續運作，
-            形成一種數位存在感的延續。
-        </p>
-        <div class="page-number">5</div>
-    </div>
-    <div class="page">
-      
-
-        <div class="section-title">
-            【現實問題】與倫理困境
-        </div>
-
-        <div class="sub-title">
-            永無止境的數位幽靈通知
-        </div>
-
-        <ul>
-            <li>家人持續收到通知與生日提醒。</li>
-            <li>社群平台跳出歷史回憶內容。</li>
-            <li>好友推薦機制持續出現已故者帳號。</li>
-        </ul>
-
-        <div class="sub-title">
-            AI 與演算法延續已故者痕跡
-        </div>
-
-        <p>
-            隨著生成式 AI 發展，
-            未來可能透過聲音模擬、
-            對話重建甚至人格複製，
-            讓逝者以另一種形式持續存在。
-            然而，這也帶來數位永生的倫理爭議。
-        </p>
-
-       <div class="page-number">6</div>
+    <div class="story">
+        <p>她離開的第 49 天。</p>
+        <p>她的信箱收到一封通知。</p>
+        <p>「我們很久沒有看到您登入了。」</p>
+        <p>「請點擊以下連結確認帳戶狀態。」</p>
+        <p>她當然不會點。</p>
+        <p>但系統不知道。</p>
+        <p>Spotify 還在推薦新歌。</p>
+        <p>YouTube 還在推她喜歡的影片。</p>
+        <p>購物網站還在提醒她：「你加入購物車的商品現在特價喔！」</p>
     </div>
 
-    <div class="page">
+    <div class="page-number">2</div>
+</div>
 
-        <div class="section-title">
-            【行動小整理】數位遺產管理
-        </div>
-
-        <div class="sub-title">
-            1. 主動關閉或清理不必要通知
-        </div>
-
-        <p>
-            定期整理不再使用的帳號與應用程式，
-            降低演算法持續推播的機會。
-        </p>
-
-        <div class="sub-title">
-            2. 善用帳號閒置管理功能
-        </div>
-
-        <ul>
-            <li>Google 閒置帳戶管理員：可設定未登入後的資料移轉或自動刪除。</li>
-            <li>Apple 數位遺產計畫：可指定遺產聯絡人處理重要資料。</li>
-        </ul>
-
-        <p>
-            提早規劃數位遺產，不只是管理資料，
-            更是留給家人的一份體貼。
-        </p>
-        <div class="page-number">7</div>
+<!-- ================= 小說第2頁 ================= -->
+<div class="page">
+    <div class="story">
+        <p>世界沒有停止。</p>
+        <p>演算法也沒有。</p>
+        <p>它們不知道什麼叫死亡。</p>
+        <p>它們只知道：</p>
+        <p>你有沒有登入、有沒有點擊、有沒有消費。</p>
     </div>
 
+    <div class="page-number">3</div>
+</div>
+
+<!-- ================= 小說第3頁 ================= -->
+<div class="page">
+    <div class="story">
+        <p>某天，她媽媽滑到她的帳號。</p>
+        <p>看到下面寫著：「為你推薦」。</p>
+        <p>她突然哭了。</p>
+        <p>不是因為思念。</p>
+        <p>而是因為——</p>
+        <p>這個世界還在假裝她存在。</p>
     </div>
+
+    <div class="page-number">4</div>
+</div>
+
+<!-- ================= 解說1 ================= -->
+<div class="page">
+    <div class="section-title">正式解說｜演算法與數位存在</div>
+
+    <div class="sub-title">演算法如何運作？</div>
+
+    <p>現代平台透過數學模型分析行為資料，以提升使用者停留時間與點擊率。</p>
+
+    <ul>
+        <li>點擊與瀏覽軌跡</li>
+        <li>停留時間</li>
+        <li>搜尋紀錄</li>
+        <li>消費行為</li>
+    </ul>
+
+    <div class="page-number">5</div>
+</div>
+
+<!-- ================= 解說2 ================= -->
+<div class="page">
+    <div class="section-title">平台只認「活躍度」的機械邏輯</div>
+
+    <p>系統只判斷活躍與不活躍，不理解死亡。</p>
+
+    <p>帳號沉寂後仍會收到推播與通知。</p>
+
+    <p>數位足跡仍持續存在。</p>
+
+    <div class="page-number">6</div>
+</div>
+
+<!-- ================= 解說3 ================= -->
+<div class="page">
+    <div class="section-title">【現實問題】與倫理困境</div>
+
+    <ul>
+        <li>數位幽靈通知持續存在</li>
+        <li>社群平台持續推薦已故帳號</li>
+        <li>AI 可能重建人格</li>
+    </ul>
+
+    <div class="page-number">7</div>
+</div>
+
+<!-- ================= 解說4 ================= -->
+<div class="page">
+    <div class="section-title">【行動小整理】數位遺產管理</div>
+
+    <p>應提前整理數位帳號與資料。</p>
+
+    <ul>
+        <li>關閉不必要通知</li>
+        <li>設定帳號遺產管理</li>
+        <li>清理長期未使用服務</li>
+    </ul>
+
+    <div class="page-number">8</div>
+</div>
 
 </div>
 
