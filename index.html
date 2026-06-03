@@ -61,11 +61,7 @@ html_content = """<!DOCTYPE html>
             transform-origin: left center;
             overflow: hidden;
             user-select: none;
-        }
-
-        /* 右側頁面基本定位（初始狀態疊在右邊） */
-        .page-right {
-            left: 50%;
+    
         }
 
         /* 左側頁面基本定位（翻過去後的狀態） */
@@ -87,11 +83,7 @@ html_content = """<!DOCTYPE html>
             position: relative;
         }
 
-        /* 背面內容（左頁）需要預先水平翻轉，翻過來時才會是正的 */
-        .page-back {
-            transform: rotateY(180deg);
-            border-right: 1px solid rgba(0, 47, 167, 0.08);
-        }
+
         
         .page-front {
             border-left: 1px solid rgba(0, 47, 167, 0.08);
