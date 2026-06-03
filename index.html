@@ -18,6 +18,10 @@ body{
     font-family:"宋體","PMingLiU","SimSun",serif;
     color:#222;
     line-height:2;
+
+    scroll-snap-type:y mandatory;
+    overflow-y:scroll;
+    height:100vh;
 }
 
 .container{
@@ -119,7 +123,7 @@ li{
     font-weight:bold;
 }
 
-page{
+.page{
     width:800px;
     min-height:1100px;
 
@@ -131,7 +135,11 @@ page{
 
     box-shadow:0 0 20px rgba(0,0,0,0.15);
 
+    border-radius:12px;
+
     position:relative;
+
+    scroll-snap-align:start;
 }
 
 .page:last-child{
@@ -140,10 +148,12 @@ page{
 
 .page-number{
     position:absolute;
-    bottom:20px;
+    bottom:25px;
     left:0;
     right:0;
+
     text-align:center;
+
     color:#002FA7;
     font-size:20px;
 }
